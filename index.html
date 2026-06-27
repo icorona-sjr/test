@@ -245,7 +245,7 @@
 // ──────────────────────────────────────────────
 // CONFIGURACIÓN — reemplaza con tu URL de Google Apps Script
 // ──────────────────────────────────────────────
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxxFxBvbkJOUH16p-wuymhDlv066RulpQjdJgEMzd92BuoelkZm07kJzOha3qriwBJNYA/exec';
+const APPS_SCRIPT_URL = 'TU_URL_AQUI';
 // ──────────────────────────────────────────────
 
 const SECTIONS=[
@@ -267,7 +267,7 @@ const SECTIONS=[
     {q:'Un CÍRCULO tiene siempre:',opts:['a) Altura','b) Circunferencia','c) Latitud','d) Longitud','e) Radio'],ans:['b','e']},
     {q:'Un PÁJARO tiene siempre:',opts:['a) Huesos','b) Huevos','c) Pico','d) Nido','e) Canto'],ans:['a','c']},
     {q:'La MÚSICA tiene siempre:',opts:['a) Oyente','b) Piano','c) Ritmo','d) Sonido','e) Violín'],ans:['c','d']},
-    {q:'Un BANQUETE tiene siempre:',opts:['a) Alimentos','b) Música','c) Personas','d) Discursos','e) Anfitrión'],ans:['a','c']},
+    {q:'Un BANQUETE tiene siempre:',opts:['a) Alimentos','b) Música','c) Personas','d) Discursos','e) Anfitrión'],ans:['a','e']},
     {q:'Un OBJETO tiene siempre:',opts:['a) Calor','b) Tamaño','c) Sabor','d) Valor','e) Peso'],ans:['b','e']},
     {q:'Una CONVERSACIÓN tiene siempre:',opts:['a) Acuerdos','b) Personas','c) Preguntas','d) Ingenio','e) Palabras'],ans:['b','e']},
     {q:'Una DEUDA implica siempre:',opts:['a) Acreedor','b) Deudor','c) Interés','d) Hipoteca','e) Pago'],ans:['a','b']},
@@ -278,13 +278,13 @@ const SECTIONS=[
     {q:'El ABORRECIMIENTO tiene siempre:',opts:['a) Aversión','b) Desagrado','c) Temor','d) Ira','e) Timidez'],ans:['a','b']},
     {q:'Una REVISTA tiene siempre:',opts:['a) Anuncios','b) Papel','c) Fotografías','d) Grabados','e) Impresión'],ans:['b','e']},
     {q:'La CONTROVERSIA implica siempre:',opts:['a) Argumentos','b) Desacuerdos','c) Aversión','d) Público','e) Resumen'],ans:['a','b']},
-    {q:'Un BARCO tiene siempre:',opts:['a) Maquinaria','b) Cañones','c) Quilla','d) Timón','e) Velas'],ans:['a','c']}
+    {q:'Un BARCO tiene siempre:',opts:['Maquinaria','Cañones','Quilla','Timón','Velas'],ans:['a','c']}
   ]},
   {id:'concentracion',name:'Concentración',intro:'Resuelve los problemas matemáticos. Puedes usar papel para los cálculos. No uses calculadora.',type:'text',
   questions:[
-    {q:'A compró 2 lápices por $5.00. ¿Cuántos lápices puede comprarse con $50.00?',ans:'20'},
+    {q:'Alex compró 2 lápices por $5.00. ¿Cuántos lápices puede comprarse con $50.00?',ans:'20'},
     {q:'Si un hombre gana $200.00 diarios y gasta $140.00, ¿cuántos días tardaría en ahorrar $3,000.00?',ans:'50'},
-    {q:'¿Cuántas horas tardaría un automóvil en recorrer 660 km a 60 km/h?',ans:'11'},
+    {q:'¿Cuántas horas tardará un automóvil en recorrer 660 km a 60 km/h?',ans:'11'},
     {q:'La capacidad de un refrigerador rectangular es de 48 metros cúbicos. Tiene 6 metros de largo por 4 de ancho. ¿Cuál es su altura?',ans:'2'},
     {q:'Si dos pasteles cuestan $600.00, ¿cuántos pesos cuesta la sexta parte de un pastel?',ans:'50'},
     {q:'¿Cuántas veces más es 2×3×4×6 que 3×4?',ans:'12'},
@@ -293,7 +293,7 @@ const SECTIONS=[
     {q:'Si 7 hombres hacen un pozo de 40 metros en 2 días, ¿cuántos hombres se necesitan para hacerlo en medio día?',ans:'56'},
     {q:'A tiene $180.00; B tiene 2/3 de lo que tiene A, y C tiene 1/2 de lo que tiene B. ¿Cuánto tienen todos juntos?',ans:'360'},
     {q:'Si un hombre corre 100 metros en 10 segundos, ¿cuántos metros correrá en 1/5 de segundo?',ans:'2'},
-    {q:'Un hombre gasta 1/4 de su sueldo en casa y alimentos y 4/8 en otros gastos. ¿Qué tanto por ciento de su sueldo ahorra?',ans:'25'}
+    {q:'Un hombre gasta 1/4 de su sueldo en casa y alimentos y 4/8 en otros gastos. ¿Qué porcentaje de su sueldo ahorra?',ans:'25'}
   ]},
   {id:'analisis',name:'Análisis',intro:'Lee el enunciado y responde Sí si es verdadero, o No si es falso.',type:'yesno',
   questions:[
@@ -310,7 +310,7 @@ const SECTIONS=[
   ]},
   {id:'abstraccion',name:'Abstracción',intro:'Elige la opción que mejor completa la analogía.',type:'mc',
   questions:[
-    {q:'ABRIGO es a USAR como PAN es a:',opts:['a) Comer','b) Hambre','c) Agua','d) Cocinar'],ans:'a'},
+    {q:'ABRIGO es a USAR como PAN es a:',opts:['Comer','b) Hambre','c) Agua','d) Cocinar'],ans:'a'},
     {q:'SEMANA es a MES como MES es a:',opts:['a) Año','b) Hora','c) Minuto','d) Siglo'],ans:'a'},
     {q:'LEON es a ANIMAL como ROSA es a:',opts:['a) Olor','b) Hoja','c) Planta','d) Espina'],ans:'c'},
     {q:'LIBERTAD es a INDEPENDENCIA como CAUTIVERIO es a:',opts:['a) Negro','b) Esclavitud','c) Libre','d) Sufrir'],ans:'b'},
@@ -328,12 +328,12 @@ const SECTIONS=[
     {q:'Consejo a veces es buen seguir un difícil',ans:'v'},{q:'Cuatrocientas todas páginas contienen libros los',ans:'f'},
     {q:'Crecen las que fresas el más roble',ans:'f'},{q:'Verdadera comparada no puede amistad ser',ans:'f'},
     {q:'Envidia la perjudiciales gula son y la',ans:'v'},{q:'Nunca acciones premiadas las deben buenas ser',ans:'f'},
-    {q:'Exteriores engañan nunca apariencias las nos',ans:'f'},{q:'Nunca es hombre las que acciones demuestran un lo',ans:'f'},
+    {q:'Exteriores engañan nunca apariencias las nos',ans:'f'},{q:'Nunca es hombre las que acciones demuestran un l',ans:'f'},
     {q:'Ciertas siempre muerte de causan clases enfermedades',ans:'f'},{q:'Odio indeseables aversión sentimientos el son y la',ans:'v'},
     {q:'Frecuentemente por juzgar podemos acciones hombres nosotros sus a los',ans:'v'},
     {q:'Una es sábana sarapes tan nunca los caliente como',ans:'f'},{q:'Nunca que descuidados los tropiezan son',ans:'f'}
   ]},
-  {id:'atencion',name:'Atención',intro:'Encuentra el patrón y escribe los dos números que faltan, separados por coma. Ojo: Los resultados de fracciones expresalos en decimales',type:'series',
+  {id:'atencion',name:'Atención',intro:'Encuentra el patrón y escribe los dos números que faltan, separados por coma.',type:'series',
   questions:[
     {q:'8 · 7 · 6 · 5 · 4 · 3 · __ · __',ans:['2','1']},
     {q:'3 · 8 · 13 · 18 · 23 · 28 · __ · __',ans:['33','38']},
@@ -470,7 +470,7 @@ function render(){
   } else if(q.type==='text'){
     html+=`<div class="q-text">${q.q}</div><input class="text-input" type="text" placeholder="Tu respuesta..." value="${saved||''}" oninput="ans[${idx}]=this.value.trim()">`;
   } else if(q.type==='series'){
-    html+=`<div class="series-display">${q.q}</div><input class="text-input" type="text" placeholder="ej: 6, 5.5" value="${saved||''}" oninput="ans[${idx}]=this.value.trim()">`;
+    html+=`<div class="series-display">${q.q}</div><input class="text-input" type="text" placeholder="ej: 64, 128" value="${saved||''}" oninput="ans[${idx}]=this.value.trim()">`;
   }
   html+='</div>';
   document.getElementById('q-mount').innerHTML=html;
@@ -507,13 +507,17 @@ function calcScores(){
     if(a===undefined||a===''||(Array.isArray(a)&&!a.length)) return;
     if(q.type==='vocab'){a===q.ans?s.vocab++:s.vocab--;}
     else if(q.type==='synthesis'){const ok=[...a].sort().join('')===[...q.ans].sort().join('');if(ok)s.sintesis++;}
-    else if(q.type==='text'){const n=parseFloat(String(a).replace(/[$,%]/g,''));if(!isNaN(n)&&Math.abs(n-parseFloat(q.ans))<0.01)s.concentracion++;}
+    else if(q.type==='text'){if(normalizeNum(a,q.ans))s.concentracion++;}
     else if(q.type==='yesno'){a===q.ans?s.analisis++:s.analisis--;}
     else if(q.type==='mc'){if(a===q.ans)s.abstraccion++;}
     else if(q.type==='vf'){a===q.ans?s.planeacion++:s.planeacion--;}
     else if(q.type==='series'){
-      const p=String(a).split(/[\s,]+/).map(x=>x.trim()).filter(Boolean);
-      if(p.length>=2){const ok=Math.abs(parseFloat(p[0])-parseFloat(q.ans[0]))<0.01&&Math.abs(parseFloat(p[1])-parseFloat(q.ans[1]))<0.01;if(ok)s.atencion++;}
+      const p=String(a).split(/[\s,]+(?=\d|[½⅓¼¾⅛⅜⅝⅞]|\d+\s*\/|\d+\s+\d)/).map(x=>x.trim()).filter(Boolean);
+      if(p.length>=2){
+        const n0=parseNum(p[0]),n1=parseNum(p[1]);
+        const ok=n0!==null&&n1!==null&&Math.abs(n0-parseFloat(q.ans[0]))<0.01&&Math.abs(n1-parseFloat(q.ans[1]))<0.01;
+        if(ok)s.atencion++;
+      }
     }
   });
   Object.keys(s).forEach(k=>s[k]=Math.max(0,s[k]));
@@ -533,7 +537,90 @@ function elapsedStr(){
   return `${m}m ${s}s`;
 }
 
-// ── Incorrect answers review ──
+// ── Number word normalization ──
+const WORD_NUMS = {
+  cero:0, uno:1, una:1, dos:2, tres:3, cuatro:4, cinco:5, seis:6, siete:7,
+  ocho:8, nueve:9, diez:10, once:11, doce:12, trece:13, catorce:14, quince:15,
+  dieciséis:16, dieciseis:16, diecisiete:17, dieciocho:18, diecinueve:19,
+  veinte:20, veintiuno:21, veintidós:22, veintidos:22, veintitrés:23, veintitres:23,
+  veinticuatro:24, veinticinco:25, veintiséis:26, veintiseis:26, veintisiete:27,
+  veintiocho:28, veintinueve:29, treinta:30, cuarenta:40, cincuenta:50,
+  sesenta:60, setenta:70, ochenta:80, noventa:90, cien:100, ciento:100,
+  doscientos:200, trescientos:300, cuatrocientos:400, quinientos:500,
+  seiscientos:600, setecientos:700, ochocientos:800, novecientos:900,
+  mil:1000, 'dos mil':2000, 'tres mil':3000, 'cuatro mil':4000, 'cinco mil':5000,
+  'diez mil':10000, 'veinte':20, 'treinta y uno':31, 'cuarenta y dos':42,
+  'cincuenta y seis':56, 'treinta y seis':36, 'veintiocho':28,
+  // compound tens+units
+  'treinta y uno':31,'treinta y dos':32,'treinta y tres':33,'treinta y cuatro':34,
+  'treinta y cinco':35,'treinta y seis':36,'treinta y siete':37,'treinta y ocho':38,
+  'treinta y nueve':39,'cuarenta y uno':41,'cuarenta y dos':42,'cuarenta y tres':43,
+  'cuarenta y cuatro':44,'cuarenta y cinco':45,'cuarenta y seis':46,'cuarenta y siete':47,
+  'cuarenta y ocho':48,'cuarenta y nueve':49,'cincuenta y uno':51,'cincuenta y dos':52,
+  'cincuenta y tres':53,'cincuenta y cuatro':54,'cincuenta y cinco':55,
+  'cincuenta y seis':56,'cincuenta y siete':57,'cincuenta y ocho':58,'cincuenta y nueve':59,
+  'sesenta y uno':61,'setenta y dos':72,'ochenta y cinco':85,'noventa y nueve':99,
+  'ciento veinte':120,'ciento ochenta':180,'doscientos veinte':220,
+  'trescientos sesenta':360,'cuatrocientos':400,'quinientos':500
+};
+
+function wordToNum(str) {
+  const s = str.trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // strip accents for matching
+    .replace(/[áéíóúü]/g, c => ({á:'a',é:'e',í:'i',ó:'o',ú:'u',ü:'u'}[c]||c));
+  // Try direct lookup (with accents stripped)
+  const stripped = Object.fromEntries(
+    Object.entries(WORD_NUMS).map(([k,v])=>[k.normalize('NFD').replace(/[\u0300-\u036f]/g,''),v])
+  );
+  if (stripped[s] !== undefined) return stripped[s];
+  return null;
+}
+
+function parseFraction(str) {
+  // Handles: "1/4", "13 1/4", "½", "¾", "¼", "13¼", "13 ¾"
+  const vulgar = {'½':0.5,'⅓':1/3,'⅔':2/3,'¼':0.25,'¾':0.75,'⅕':0.2,'⅖':0.4,'⅗':0.6,'⅘':0.8,'⅙':1/6,'⅚':5/6,'⅛':0.125,'⅜':0.375,'⅝':0.625,'⅞':0.875};
+  let s = str.trim();
+  // Replace vulgar fraction chars (possibly preceded by a whole number)
+  for (const [ch, val] of Object.entries(vulgar)) {
+    if (s.includes(ch)) {
+      const before = s.replace(ch, '').trim();
+      const whole = before === '' ? 0 : parseFloat(before);
+      if (!isNaN(whole)) return whole + val;
+    }
+  }
+  // Mixed number: "13 1/4" or just "1/4"
+  const mixed = s.match(/^(\d+)\s+(\d+)\/(\d+)$/);
+  if (mixed) return parseInt(mixed[1]) + parseInt(mixed[2]) / parseInt(mixed[3]);
+  const simple = s.match(/^(\d+)\/(\d+)$/);
+  if (simple) return parseInt(simple[1]) / parseInt(simple[2]);
+  return null;
+}
+
+function parseNum(s) {
+  const f = parseFraction(s);
+  if (f !== null) return f;
+  const n = parseFloat(String(s).replace(/[$%,]/g,''));
+  return isNaN(n) ? null : n;
+}
+
+
+function normalizeNum(raw, expected) {
+  const target = parseFloat(expected);
+  // Clean common symbols and whitespace
+  const cleaned = String(raw).trim()
+    .replace(/[$%,\s]/g,'')  // remove $, %, commas, spaces
+    .replace(/^\./, '0.')    // handle .5 → 0.5
+    .toLowerCase();
+  // Direct numeric match
+  const n = parseFloat(cleaned);
+  if (!isNaN(n) && Math.abs(n - target) < 0.01) return true;
+  // Word match
+  const fromWord = wordToNum(String(raw).trim());
+  if (fromWord !== null && Math.abs(fromWord - target) < 0.01) return true;
+  return false;
+}
+
+
 function formatGiven(q, a) {
   if (a === undefined || a === '' || (Array.isArray(a) && !a.length)) return null;
   if (q.type === 'vocab') return a === '1' ? 'Sinónimos (1)' : 'Opuestos (0)';
@@ -573,10 +660,12 @@ function isCorrect(q, a) {
   if (q.type === 'vf') return a === q.ans;
   if (q.type === 'mc') return a === q.ans;
   if (q.type === 'synthesis') return [...a].sort().join('') === [...q.ans].sort().join('');
-  if (q.type === 'text') { const n = parseFloat(String(a).replace(/[$,%]/g, '')); return !isNaN(n) && Math.abs(n - parseFloat(q.ans)) < 0.01; }
+  if (q.type === 'text') { return normalizeNum(a, q.ans); }
   if (q.type === 'series') {
-    const p = String(a).split(/[\s,]+/).map(x => x.trim()).filter(Boolean);
-    return p.length >= 2 && Math.abs(parseFloat(p[0]) - parseFloat(q.ans[0])) < 0.01 && Math.abs(parseFloat(p[1]) - parseFloat(q.ans[1])) < 0.01;
+    const p = String(a).split(/[\s,]+(?=\d|[½⅓¼¾⅛⅜⅝⅞]|\d+\s*\/|\d+\s+\d)/).map(x => x.trim()).filter(Boolean);
+    if (p.length < 2) return false;
+    const n0 = parseNum(p[0]), n1 = parseNum(p[1]);
+    return n0 !== null && n1 !== null && Math.abs(n0 - parseFloat(q.ans[0])) < 0.01 && Math.abs(n1 - parseFloat(q.ans[1])) < 0.01;
   }
   return false;
 }
