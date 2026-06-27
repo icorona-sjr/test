@@ -245,7 +245,7 @@
 // ──────────────────────────────────────────────
 // CONFIGURACIÓN — reemplaza con tu URL de Google Apps Script
 // ──────────────────────────────────────────────
-const APPS_SCRIPT_URL = 'TU_URL_AQUI';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxxFxBvbkJOUH16p-wuymhDlv066RulpQjdJgEMzd92BuoelkZm07kJzOha3qriwBJNYA/exec';
 // ──────────────────────────────────────────────
 
 const SECTIONS=[
@@ -278,13 +278,13 @@ const SECTIONS=[
     {q:'El ABORRECIMIENTO tiene siempre:',opts:['a) Aversión','b) Desagrado','c) Temor','d) Ira','e) Timidez'],ans:['a','b']},
     {q:'Una REVISTA tiene siempre:',opts:['a) Anuncios','b) Papel','c) Fotografías','d) Grabados','e) Impresión'],ans:['b','e']},
     {q:'La CONTROVERSIA implica siempre:',opts:['a) Argumentos','b) Desacuerdos','c) Aversión','d) Público','e) Resumen'],ans:['a','b']},
-    {q:'Un BARCO tiene siempre:',opts:['Maquinaria','Cañones','Quilla','Timón','Velas'],ans:['a','c']}
+    {q:'Un BARCO tiene siempre:',opts:['a) Maquinaria','b) Cañones','c) Quilla','d) Timón','e) Velas'],ans:['a','c']}
   ]},
   {id:'concentracion',name:'Concentración',intro:'Resuelve los problemas matemáticos. Puedes usar papel para los cálculos. No uses calculadora.',type:'text',
   questions:[
-    {q:'Alex compró 2 lápices por $5.00. ¿Cuántos lápices puede comprarse con $50.00?',ans:'20'},
+    {q:'A compró 2 lápices por $5.00. ¿Cuántos lápices puede comprarse con $50.00?',ans:'20'},
     {q:'Si un hombre gana $200.00 diarios y gasta $140.00, ¿cuántos días tardaría en ahorrar $3,000.00?',ans:'50'},
-    {q:'¿Cuántas horas tardará un automóvil en recorrer 660 km a 60 km/h?',ans:'11'},
+    {q:'¿Cuántas horas tardaría un automóvil en recorrer 660 km a 60 km/h?',ans:'11'},
     {q:'La capacidad de un refrigerador rectangular es de 48 metros cúbicos. Tiene 6 metros de largo por 4 de ancho. ¿Cuál es su altura?',ans:'2'},
     {q:'Si dos pasteles cuestan $600.00, ¿cuántos pesos cuesta la sexta parte de un pastel?',ans:'50'},
     {q:'¿Cuántas veces más es 2×3×4×6 que 3×4?',ans:'12'},
@@ -293,7 +293,7 @@ const SECTIONS=[
     {q:'Si 7 hombres hacen un pozo de 40 metros en 2 días, ¿cuántos hombres se necesitan para hacerlo en medio día?',ans:'56'},
     {q:'A tiene $180.00; B tiene 2/3 de lo que tiene A, y C tiene 1/2 de lo que tiene B. ¿Cuánto tienen todos juntos?',ans:'360'},
     {q:'Si un hombre corre 100 metros en 10 segundos, ¿cuántos metros correrá en 1/5 de segundo?',ans:'2'},
-    {q:'Un hombre gasta 1/4 de su sueldo en casa y alimentos y 4/8 en otros gastos. ¿Qué porcentaje de su sueldo ahorra?',ans:'25'}
+    {q:'Un hombre gasta 1/4 de su sueldo en casa y alimentos y 4/8 en otros gastos. ¿Qué tanto por ciento de su sueldo ahorra?',ans:'25'}
   ]},
   {id:'analisis',name:'Análisis',intro:'Lee el enunciado y responde Sí si es verdadero, o No si es falso.',type:'yesno',
   questions:[
@@ -310,7 +310,7 @@ const SECTIONS=[
   ]},
   {id:'abstraccion',name:'Abstracción',intro:'Elige la opción que mejor completa la analogía.',type:'mc',
   questions:[
-    {q:'ABRIGO es a USAR como PAN es a:',opts:['Comer','b) Hambre','c) Agua','d) Cocinar'],ans:'a'},
+    {q:'ABRIGO es a USAR como PAN es a:',opts:['a) Comer','b) Hambre','c) Agua','d) Cocinar'],ans:'a'},
     {q:'SEMANA es a MES como MES es a:',opts:['a) Año','b) Hora','c) Minuto','d) Siglo'],ans:'a'},
     {q:'LEON es a ANIMAL como ROSA es a:',opts:['a) Olor','b) Hoja','c) Planta','d) Espina'],ans:'c'},
     {q:'LIBERTAD es a INDEPENDENCIA como CAUTIVERIO es a:',opts:['a) Negro','b) Esclavitud','c) Libre','d) Sufrir'],ans:'b'},
@@ -460,12 +460,12 @@ function render(){
     </div>`;
   } else if(q.type==='mc'){
     html+=`<div class="q-text">${q.q}</div><div class="options">`;
-    q.opts.forEach(o=>{const l=o[0].toLowerCase();html+=`<button class="opt-btn${saved===l?' selected':''}" onclick="pick('${l}',this,'opt-btn')">${o}</button>`;});
+    q.opts.forEach(o=>{const l=o[0].toLowerCase();const label=o.replace(/^[a-e]\)\s*/i,'');html+=`<button class="opt-btn${saved===l?' selected':''}" onclick="pick('${l}',this,'opt-btn')">${label}</button>`;});
     html+='</div>';
   } else if(q.type==='synthesis'){
     const sel=saved||[];
     html+=`<div class="q-text">${q.q}</div><div class="options">`;
-    q.opts.forEach(o=>{const l=o[0].toLowerCase();html+=`<button class="opt-btn${sel.includes(l)?' selected':''}" onclick="pickSyn('${l}',this)">${o}</button>`;});
+    q.opts.forEach(o=>{const l=o[0].toLowerCase();const label=o.replace(/^[a-e]\)\s*/i,'');html+=`<button class="opt-btn${sel.includes(l)?' selected':''}" onclick="pickSyn('${l}',this)">${label}</button>`;});
     html+=`</div><p class="syn-hint">Selecciona exactamente 2 opciones</p>`;
   } else if(q.type==='text'){
     html+=`<div class="q-text">${q.q}</div><input class="text-input" type="text" placeholder="Tu respuesta..." value="${saved||''}" oninput="ans[${idx}]=this.value.trim()">`;
@@ -512,8 +512,8 @@ function calcScores(){
     else if(q.type==='mc'){if(a===q.ans)s.abstraccion++;}
     else if(q.type==='vf'){a===q.ans?s.planeacion++:s.planeacion--;}
     else if(q.type==='series'){
-      const p=String(a).split(/[\s,]+(?=\d|[½⅓¼¾⅛⅜⅝⅞]|\d+\s*\/|\d+\s+\d)/).map(x=>x.trim()).filter(Boolean);
-      if(p.length>=2){
+      const p=splitSeriesAnswer(a);
+      if(p){
         const n0=parseNum(p[0]),n1=parseNum(p[1]);
         const ok=n0!==null&&n1!==null&&Math.abs(n0-parseFloat(q.ans[0]))<0.01&&Math.abs(n1-parseFloat(q.ans[1]))<0.01;
         if(ok)s.atencion++;
@@ -596,6 +596,19 @@ function parseFraction(str) {
   return null;
 }
 
+function splitSeriesAnswer(raw) {
+  // Extracts exactly two numbers from input like:
+  // "13, 13.25" / "13 13.25" / "13, 13 1/4" / "13 1/4, 13.25" / "13¼ 13½"
+  const s = String(raw).trim();
+
+  // Pattern for a single number token (integer, decimal, mixed fraction, vulgar char)
+  const numPat = '(?:\\d+\\s+\\d+\\/\\d+|\\d+\\/\\d+|\\d+(?:\\.\\d+)?|[½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞])(?:[\\s]*[½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞])?';
+  const re = new RegExp(numPat, 'g');
+  const matches = s.match(re);
+  if (!matches || matches.length < 2) return null;
+  return [matches[0].trim(), matches[1].trim()];
+}
+
 function parseNum(s) {
   const f = parseFraction(s);
   if (f !== null) return f;
@@ -662,8 +675,8 @@ function isCorrect(q, a) {
   if (q.type === 'synthesis') return [...a].sort().join('') === [...q.ans].sort().join('');
   if (q.type === 'text') { return normalizeNum(a, q.ans); }
   if (q.type === 'series') {
-    const p = String(a).split(/[\s,]+(?=\d|[½⅓¼¾⅛⅜⅝⅞]|\d+\s*\/|\d+\s+\d)/).map(x => x.trim()).filter(Boolean);
-    if (p.length < 2) return false;
+    const p = splitSeriesAnswer(a);
+    if (!p) return false;
     const n0 = parseNum(p[0]), n1 = parseNum(p[1]);
     return n0 !== null && n1 !== null && Math.abs(n0 - parseFloat(q.ans[0])) < 0.01 && Math.abs(n1 - parseFloat(q.ans[1])) < 0.01;
   }
