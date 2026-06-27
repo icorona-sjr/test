@@ -245,7 +245,7 @@
 // ──────────────────────────────────────────────
 // CONFIGURACIÓN — reemplaza con tu URL de Google Apps Script
 // ──────────────────────────────────────────────
-const APPS_SCRIPT_URL = 'TU_URL_AQUI';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxxFxBvbkJOUH16p-wuymhDlv066RulpQjdJgEMzd92BuoelkZm07kJzOha3qriwBJNYA/exec';
 // ──────────────────────────────────────────────
 
 const SECTIONS=[
@@ -328,12 +328,12 @@ const SECTIONS=[
     {q:'Consejo a veces es buen seguir un difícil',ans:'v'},{q:'Cuatrocientas todas páginas contienen libros los',ans:'f'},
     {q:'Crecen las que fresas el más roble',ans:'f'},{q:'Verdadera comparada no puede amistad ser',ans:'f'},
     {q:'Envidia la perjudiciales gula son y la',ans:'v'},{q:'Nunca acciones premiadas las deben buenas ser',ans:'f'},
-    {q:'Exteriores engañan nunca apariencias las nos',ans:'f'},{q:'Nunca es hombre las que acciones demuestran un l',ans:'f'},
+    {q:'Exteriores engañan nunca apariencias las nos',ans:'f'},{q:'Nunca es hombre las que acciones demuestran un lo',ans:'f'},
     {q:'Ciertas siempre muerte de causan clases enfermedades',ans:'f'},{q:'Odio indeseables aversión sentimientos el son y la',ans:'v'},
     {q:'Frecuentemente por juzgar podemos acciones hombres nosotros sus a los',ans:'v'},
     {q:'Una es sábana sarapes tan nunca los caliente como',ans:'f'},{q:'Nunca que descuidados los tropiezan son',ans:'f'}
   ]},
-  {id:'atencion',name:'Atención',intro:'Encuentra el patrón y escribe los dos números que faltan, separados por coma.',type:'series',
+  {id:'atencion',name:'Atención',intro:'Encuentra el patrón y escribe los dos números que faltan, separados por coma. Ojo: Los resultados de fracciones expresalos en decimales',type:'series',
   questions:[
     {q:'8 · 7 · 6 · 5 · 4 · 3 · __ · __',ans:['2','1']},
     {q:'3 · 8 · 13 · 18 · 23 · 28 · __ · __',ans:['33','38']},
@@ -470,7 +470,7 @@ function render(){
   } else if(q.type==='text'){
     html+=`<div class="q-text">${q.q}</div><input class="text-input" type="text" placeholder="Tu respuesta..." value="${saved||''}" oninput="ans[${idx}]=this.value.trim()">`;
   } else if(q.type==='series'){
-    html+=`<div class="series-display">${q.q}</div><input class="text-input" type="text" placeholder="ej: 64, 128" value="${saved||''}" oninput="ans[${idx}]=this.value.trim()">`;
+    html+=`<div class="series-display">${q.q}</div><input class="text-input" type="text" placeholder="ej: 6, 5.5" value="${saved||''}" oninput="ans[${idx}]=this.value.trim()">`;
   }
   html+='</div>';
   document.getElementById('q-mount').innerHTML=html;
