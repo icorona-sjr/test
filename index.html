@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test de Inteligencia C.I.</title>
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --surface: #ffffff;
+    --surface-alt: #f0efe9;
+    --border: #e2e0d8;
+    --border-strong: #c8c6bc;
+    --text: #1a1916;
+    --text-secondary: #5a5850;
+    --text-muted: #8c8a82;
+    --accent: #2a6496;
+    --accent-bg: #e8f1f8;
+    --accent-border: #9bbcd8;
+    --accent-text: #1a4a70;
+    --danger: #c0392b;
+    --danger-bg: #fdf0ee;
+    --warning: #d97706;
+    --warning-bg: #fef9ee;
+    --radius: 8px;
+    --shadow: 0 1px 4px rgba(0,0,0,.08), 0 0 0 0.5px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:16px;line-height:1.6;color:var(--text);min-height:100vh}
+  #app{max-width:680px;margin:0 auto;padding:2rem 1.25rem}
+  .screen{display:none}
+  .screen.active{display:block}
+
+  /* Start screen */
+  .tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:20px;background:var(--accent-bg);color:var(--accent-text);border:0.5px solid var(--accent-border);margin-bottom:1rem}
+  h1{font-size:2rem;font-weight:700;color:var(--text);margin-bottom:.5rem;line-height:1.2}
+  .hero-sub{font-size:15px;color:var(--text-secondary);line-height:1.7}
+  .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:1.5rem 0}
+  .info-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
+  .info-num{font-size:1.6rem;font-weight:700;color:var(--accent);line-height:1}
+  .info-label{font-size:12px;color:var(--text-muted);margin-top:.25rem}
+  .rules{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.5rem}
+  .rules h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:.75rem}
+  .rules li{font-size:14px;color:var(--text-secondary);margin-left:1.25rem;margin-bottom:.4rem}
+  .field-wrap{margin-bottom:1rem}
+  .field-label{font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:.4rem;display:block}
+  .name-input{width:100%;padding:.75rem 1rem;font-size:15px;border:0.5px solid var(--border-strong);border-radius:var(--radius);background:var(--surface);color:var(--text);outline:none;transition:border-color .15s}
+  .name-input:focus{border-color:var(--accent)}
+  .name-input.error{border-color:var(--danger);background:#fff8f7}
+  .field-error{font-size:12px;color:var(--danger);margin-top:.3rem;display:none}
+  .field-error.visible{display:block}
+  .btn-start{width:100%;padding:.9rem;font-size:15px;font-weight:600;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);cursor:pointer;transition:opacity .15s}
+  .btn-start:hover{opacity:.88}
+
+  /* Timer */
+  .quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:1rem}
+  .timer-wrap{display:flex;align-items:center;gap:.5rem;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:.4rem .85rem;flex-shrink:0}
+  .timer-icon{font-size:15px}
+  .timer-display{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text);letter-spacing:.03em;min-width:48px}
+  .timer-display.warning{color:var(--warning)}
+  .timer-display.danger{color:var(--danger);animation:pulse 1s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+  .progress-wrap{flex:1;background:var(--surface-alt);border-radius:4px;height:5px;overflow:hidden}
+  .progress-fill{background:var(--accent);height:100%;border-radius:4px;transition:width .3s}
+  .q-count-label{font-size:13px;color:var(--text-muted);white-space:nowrap;flex-shrink:0}
+
+  /* Quiz */
+  .section-pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:20px;background:var(--accent-bg);color:var(--accent-text);border:0.5px solid var(--accent-border);margin-bottom:.75rem}
+  .section-intro-box{border-left:3px solid var(--accent);padding:.65rem 1rem;background:var(--accent-bg);border-radius:0 var(--radius) var(--radius) 0;margin-bottom:1.25rem;font-size:13px;color:var(--accent-text);line-height:1.6}
+  .q-card{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:1.5rem;box-shadow:var(--shadow)}
+  .word-pair{font-size:17px;font-weight:500;color:var(--text);padding:.75rem 1rem;background:var(--surface-alt);border-radius:var(--radius);margin-bottom:1.25rem;text-align:center}
+  .q-text{font-size:15px;color:var(--text);line-height:1.65;margin-bottom:1.25rem}
+  .q-hint{font-size:13px;color:var(--text-muted);font-style:italic;margin-bottom:.5rem}
+  .tf-group,.options{display:flex;flex-direction:column;gap:.5rem}
+  .tf-group{flex-direction:row}
+  .tf-btn,.opt-btn{flex:1;padding:.65rem 1rem;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;text-align:left;transition:background .12s,border-color .12s;line-height:1.4}
+  .tf-btn{text-align:center}
+  .tf-btn:hover,.opt-btn:hover{background:var(--surface-alt);border-color:var(--border-strong)}
+  .tf-btn.selected,.opt-btn.selected{border-color:var(--accent);background:var(--accent-bg);color:var(--accent-text)}
+  .text-input{width:100%;padding:.65rem .9rem;font-size:15px;border:0.5px solid var(--border-strong);border-radius:var(--radius);background:var(--surface);color:var(--text);outline:none}
+  .text-input:focus{border-color:var(--accent)}
+  .series-display{font-family:'SF Mono',Consolas,monospace;font-size:17px;font-weight:500;text-align:center;padding:.85rem 1rem;background:var(--surface-alt);border-radius:var(--radius);margin-bottom:1.25rem;letter-spacing:.08em;color:var(--text)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.25rem}
+  .btn-next{padding:.65rem 1.5rem;font-size:14px;font-weight:600;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);cursor:pointer;transition:opacity .15s}
+  .btn-next:hover{opacity:.88}
+  .btn-skip{padding:.65rem 1rem;font-size:14px;background:none;border:0.5px solid var(--border);border-radius:var(--radius);color:var(--text-muted);cursor:pointer}
+  .btn-skip:hover{background:var(--surface-alt)}
+  .syn-hint{font-size:12px;color:var(--text-muted);margin-top:.6rem}
+
+  /* Time-up modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:100;padding:1.25rem}
+  .modal-overlay.hidden{display:none}
+  .modal-box{background:var(--surface);border-radius:16px;padding:2rem;max-width:380px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.18)}
+  .modal-icon{font-size:2.5rem;margin-bottom:.75rem}
+  .modal-title{font-size:1.2rem;font-weight:700;margin-bottom:.5rem}
+  .modal-sub{font-size:14px;color:var(--text-secondary);margin-bottom:1.5rem;line-height:1.6}
+  .btn-modal{width:100%;padding:.8rem;font-size:15px;font-weight:600;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);cursor:pointer}
+
+  /* Results */
+  .result-hero{text-align:center;padding:2rem 0 1.5rem}
+  .result-name{font-size:14px;color:var(--text-muted);margin-bottom:.5rem}
+  .result-score-wrap{display:inline-flex;align-items:baseline;gap:.25rem;margin-bottom:.25rem}
+  .result-score-num{font-size:4rem;font-weight:700;color:var(--accent);line-height:1}
+  .result-score-total{font-size:1.5rem;color:var(--text-muted)}
+  .result-ci{font-size:13px;color:var(--text-muted);margin-bottom:1rem}
+  .result-badge{display:inline-block;font-size:1rem;font-weight:700;padding:.5rem 1.5rem;border-radius:20px;background:var(--accent-bg);color:var(--accent-text);border:1px solid var(--accent-border);margin-bottom:.75rem}
+  .result-interp{font-size:14px;color:var(--text-secondary);max-width:420px;margin:0 auto;line-height:1.6}
+  .time-used{display:inline-block;font-size:12px;background:var(--surface-alt);border:0.5px solid var(--border);border-radius:20px;padding:3px 12px;color:var(--text-muted);margin-top:.75rem}
+  .divider{height:0.5px;background:var(--border);margin:1.5rem 0}
+  .sec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.65rem;margin-bottom:1.5rem}
+  .sec-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:.85rem;text-align:center;box-shadow:var(--shadow)}
+  .sec-name{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
+  .sec-pts{font-size:1.6rem;font-weight:700;color:var(--text);margin:.2rem 0 .1rem}
+  .sec-max{font-size:11px;color:var(--text-muted)}
+  .interp-box{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:1.25rem}
+  .interp-box h3{font-size:13px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
+  .interp-row{display:flex;justify-content:space-between;align-items:center;padding:.35rem 0;border-bottom:0.5px solid var(--border);font-size:13px}
+  .interp-row:last-child{border:none}
+  .interp-range{color:var(--text-muted)}
+  .interp-label{font-weight:500}
+  .interp-label.active{color:var(--accent);font-weight:700}
+  .save-status{text-align:center;padding:.75rem;border-radius:var(--radius);font-size:13px;margin-bottom:1rem}
+  .save-status.saving{background:var(--warning-bg);color:var(--warning)}
+  .save-status.saved{background:#edf7f2;color:#1a6640}
+  .save-status.error{background:var(--danger-bg);color:var(--danger)}
+  .btn-retry{width:100%;padding:.8rem;font-size:14px;font-weight:500;background:var(--surface);color:var(--text);border:0.5px solid var(--border-strong);border-radius:var(--radius);cursor:pointer;transition:background .15s}
+  .btn-retry:hover{background:var(--surface-alt)}
+  .disclaimer{font-size:12px;color:var(--text-muted);text-align:center;line-height:1.5;margin-top:1rem}
+  @media(max-width:480px){
+    h1{font-size:1.5rem}
+    .tf-group{flex-direction:column}
+    .result-score-num{font-size:3rem}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== START ===== -->
+  <div id="start-screen" class="screen active">
+    <div style="margin-bottom:1.5rem">
+      <div class="tag">Evaluación C.I.</div>
+      <h1>Test de Inteligencia</h1>
+      <p class="hero-sub">Mide el coeficiente intelectual en 7 áreas cognitivas. Las preguntas se presentan en orden aleatorio en cada intento.</p>
+    </div>
+    <div class="info-grid">
+      <div class="info-card"><div class="info-num">7</div><div class="info-label">Secciones</div></div>
+      <div class="info-card"><div class="info-num">109</div><div class="info-label">Preguntas</div></div>
+      <div class="info-card"><div class="info-num">30'</div><div class="info-label">Tiempo límite</div></div>
+    </div>
+    <div class="rules">
+      <h3>Instrucciones</h3>
+      <ul>
+        <li>Lee detenidamente cada enunciado antes de responder.</li>
+        <li>Puedes usar papel para los cálculos matemáticos.</li>
+        <li>No uses calculadora ni materiales de apoyo.</li>
+        <li>El cronómetro inicia al comenzar el test. Al agotarse, el resultado se registra automáticamente.</li>
+      </ul>
+    </div>
+    <div class="field-wrap">
+      <label class="field-label" for="candidate-name">Nombre del evaluado <span style="color:var(--danger)">*</span></label>
+      <input type="text" class="name-input" id="candidate-name" placeholder="Escribe el nombre completo..." autocomplete="off">
+      <div class="field-error" id="name-error">El nombre es obligatorio para continuar.</div>
+    </div>
+    <button class="btn-start" onclick="startTest()">Iniciar test</button>
+  </div>
+
+  <!-- ===== TIME-UP MODAL ===== -->
+  <div class="modal-overlay hidden" id="timeup-modal">
+    <div class="modal-box">
+      <div class="modal-icon">⏰</div>
+      <div class="modal-title">Se acabó el tiempo</div>
+      <div class="modal-sub">Los 30 minutos han concluido. Tu test se ha enviado automáticamente con las respuestas registradas hasta este momento.</div>
+      <button class="btn-modal" onclick="closeModalAndShowResults()">Ver resultado</button>
+    </div>
+  </div>
+
+  <!-- ===== QUIZ ===== -->
+  <div id="quiz-screen" class="screen">
+    <div class="quiz-header">
+      <span class="q-count-label" id="q-count-label"></span>
+      <div class="progress-wrap"><div class="progress-fill" id="prog-fill"></div></div>
+      <div class="timer-wrap">
+        <span class="timer-icon">⏱</span>
+        <span class="timer-display" id="timer-display">30:00</span>
+      </div>
+    </div>
+    <div id="q-mount"></div>
+    <div class="nav">
+      <button class="btn-skip" onclick="nextQuestion()">Omitir</button>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ===== RESULTS ===== -->
+  <div id="result-screen" class="screen">
+    <div class="result-hero">
+      <div class="result-name" id="res-name"></div>
+      <div class="result-score-wrap">
+        <span class="result-score-num" id="res-score"></span>
+        <span class="result-score-total">&nbsp;pts</span>
+      </div>
+      <div class="result-ci" id="res-range"></div>
+      <br>
+      <div class="result-badge" id="res-badge"></div>
+      <p class="result-interp" id="res-interp"></p>
+      <div class="time-used" id="res-time"></div>
+    </div>
+    <div class="save-status saving" id="save-status">⏳ Guardando resultado...</div>
+    <div class="divider"></div>
+    <h2 style="font-size:15px;font-weight:600;margin-bottom:1rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em">Puntaje por sección</h2>
+    <div class="sec-grid" id="sec-grid"></div>
+    <div class="interp-box">
+      <h3>Tabla de clasificación</h3>
+      <div id="ci-table"></div>
+    </div>
+    <button class="btn-retry" onclick="restartTest()">↺ Realizar el test de nuevo</button>
+    <p class="disclaimer">El test de inteligencia mide el C.I. de forma aproximada. Para resultados exactos, consulte con un psicólogo especialista.</p>
+  </div>
+
+</div>
+
+<script>
+// ──────────────────────────────────────────────
+// CONFIGURACIÓN — reemplaza con tu URL de Google Apps Script
+// ──────────────────────────────────────────────
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxxFxBvbkJOUH16p-wuymhDlv066RulpQjdJgEMzd92BuoelkZm07kJzOha3qriwBJNYA/exec';
+// ──────────────────────────────────────────────
+
+const SECTIONS=[
+  {id:'vocab',name:'Vocabulario',intro:'Indica (1) si las dos palabras significan lo mismo, o (0) si significan lo opuesto.',type:'vocab',
+  questions:[
+    {q:'salado – dulce',ans:'0'},{q:'alegrarse – regocijarse',ans:'1'},{q:'mayor – menor',ans:'0'},
+    {q:'sentarse – pararse',ans:'0'},{q:'desperdiciar – aprovechar',ans:'0'},{q:'conceder – negar',ans:'0'},
+    {q:'tónico – estimulante',ans:'1'},{q:'rebajar – denigrar',ans:'1'},{q:'prohibir – permitir',ans:'0'},
+    {q:'osado – audaz',ans:'1'},{q:'arrebatado – prudente',ans:'0'},{q:'obtuso – agudo',ans:'0'},
+    {q:'inepto – experto',ans:'0'},{q:'esquivar – huir',ans:'1'},{q:'rebelarse – someterse',ans:'0'},
+    {q:'monotonía – variedad',ans:'0'},{q:'confortar – consolar',ans:'1'},{q:'expeler – retener',ans:'0'},
+    {q:'dócil – sumiso',ans:'1'},{q:'transitorio – permanente',ans:'0'},{q:'seguridad – riesgo',ans:'0'},
+    {q:'aprobar – objetar',ans:'0'},{q:'expeler – arrojar',ans:'1'},{q:'engaño – impostura',ans:'1'},
+    {q:'mitigar – apaciguar',ans:'1'},{q:'iniciar – aplacar',ans:'0'},{q:'reverencia – veneración',ans:'1'},
+    {q:'sobriedad – frugalidad',ans:'1'},{q:'aumentar – menguar',ans:'0'},{q:'incitar – instigar',ans:'1'}
+  ]},
+  {id:'sintesis',name:'Síntesis',intro:'Selecciona las DOS opciones que el sujeto tiene SIEMPRE. Debes marcar exactamente dos.',type:'synthesis',
+  questions:[
+    {q:'Un CÍRCULO tiene siempre:',opts:['a) Altura','b) Circunferencia','c) Latitud','d) Longitud','e) Radio'],ans:['b','e']},
+    {q:'Un PÁJARO tiene siempre:',opts:['a) Huesos','b) Huevos','c) Pico','d) Nido','e) Canto'],ans:['a','c']},
+    {q:'La MÚSICA tiene siempre:',opts:['a) Oyente','b) Piano','c) Ritmo','d) Sonido','e) Violín'],ans:['c','d']},
+    {q:'Un BANQUETE tiene siempre:',opts:['a) Alimentos','b) Música','c) Personas','d) Discursos','e) Anfitrión'],ans:['a','c']},
+    {q:'Un OBJETO tiene siempre:',opts:['a) Calor','b) Tamaño','c) Sabor','d) Valor','e) Peso'],ans:['b','e']},
+    {q:'Una CONVERSACIÓN tiene siempre:',opts:['a) Acuerdos','b) Personas','c) Preguntas','d) Ingenio','e) Palabras'],ans:['b','e']},
+    {q:'Una DEUDA implica siempre:',opts:['a) Acreedor','b) Deudor','c) Interés','d) Hipoteca','e) Pago'],ans:['a','b']},
+    {q:'Un CIUDADANO tiene siempre:',opts:['a) País','b) Ocupación','c) Derechos','d) Propiedad','e) Voto'],ans:['a','c']},
+    {q:'Un MUSEO tiene siempre:',opts:['a) Animales','b) Orden','c) Colecciones','d) Minerales','e) Visitantes'],ans:['b','c']},
+    {q:'Un COMPROMISO implica siempre:',opts:['a) Obligación','b) Acuerdo','c) Amistad','d) Respeto','e) Satisfacción'],ans:['a','b']},
+    {q:'Los OBSTÁCULOS tienen siempre:',opts:['a) Dificultad','b) Desaliento','c) Fracaso','d) Impedimento','e) Estímulo'],ans:['a','d']},
+    {q:'El ABORRECIMIENTO tiene siempre:',opts:['a) Aversión','b) Desagrado','c) Temor','d) Ira','e) Timidez'],ans:['a','b']},
+    {q:'Una REVISTA tiene siempre:',opts:['a) Anuncios','b) Papel','c) Fotografías','d) Grabados','e) Impresión'],ans:['b','e']},
+    {q:'La CONTROVERSIA implica siempre:',opts:['a) Argumentos','b) Desacuerdos','c) Aversión','d) Público','e) Resumen'],ans:['a','b']},
+    {q:'Un BARCO tiene siempre:',opts:['a) Maquinaria','b) Cañones','c) Quilla','d) Timón','e) Velas'],ans:['a','c']}
+  ]},
+  {id:'concentracion',name:'Concentración',intro:'Resuelve los problemas matemáticos. Puedes usar papel para los cálculos. No uses calculadora.',type:'text',
+  questions:[
+    {q:'A compró 2 lápices por $5.00. ¿Cuántos lápices puede comprarse con $50.00?',ans:'20'},
+    {q:'Si un hombre gana $200.00 diarios y gasta $140.00, ¿cuántos días tardaría en ahorrar $3,000.00?',ans:'50'},
+    {q:'¿Cuántas horas tardaría un automóvil en recorrer 660 km a 60 km/h?',ans:'11'},
+    {q:'La capacidad de un refrigerador rectangular es de 48 metros cúbicos. Tiene 6 metros de largo por 4 de ancho. ¿Cuál es su altura?',ans:'2'},
+    {q:'Si dos pasteles cuestan $600.00, ¿cuántos pesos cuesta la sexta parte de un pastel?',ans:'50'},
+    {q:'¿Cuántas veces más es 2×3×4×6 que 3×4?',ans:'12'},
+    {q:'El cuatro por ciento de $1,000.00 es igual al ocho por ciento, ¿de qué cantidad?',ans:'500'},
+    {q:'¿Cuánto es el 15% de $120.00?',ans:'18'},
+    {q:'Si 7 hombres hacen un pozo de 40 metros en 2 días, ¿cuántos hombres se necesitan para hacerlo en medio día?',ans:'56'},
+    {q:'A tiene $180.00; B tiene 2/3 de lo que tiene A, y C tiene 1/2 de lo que tiene B. ¿Cuánto tienen todos juntos?',ans:'360'},
+    {q:'Si un hombre corre 100 metros en 10 segundos, ¿cuántos metros correrá en 1/5 de segundo?',ans:'2'},
+    {q:'Un hombre gasta 1/4 de su sueldo en casa y alimentos y 4/8 en otros gastos. ¿Qué tanto por ciento de su sueldo ahorra?',ans:'25'}
+  ]},
+  {id:'analisis',name:'Análisis',intro:'Lee el enunciado y responde Sí si es verdadero, o No si es falso.',type:'yesno',
+  questions:[
+    {q:'La higiene es esencial para la salud',ans:'si'},{q:'Los taquígrafos usan microscopio',ans:'no'},
+    {q:'Los tiranos son justos con sus inferiores',ans:'no'},{q:'Las personas desamparadas están sujetas con frecuencia a la caridad',ans:'si'},
+    {q:'Las personas venerables son por lo común respetadas',ans:'si'},{q:'El escorbuto es un medicamento',ans:'no'},
+    {q:'La amonestación es una clase de instrumento musical',ans:'no'},{q:'Los colores opacos son preferidos para las banderas nacionales',ans:'no'},
+    {q:'Las cosas misteriosas son a veces pavorosas',ans:'si'},{q:'Las personas conscientes cometen alguna vez errores',ans:'si'},
+    {q:'Son carnívoros los carneros',ans:'no'},{q:'Se dan asignaturas a los caballos',ans:'no'},
+    {q:'Las cartas anónimas llevan alguna vez firma de quien las escribe',ans:'no'},{q:'Son discontinuos los sonidos intermitentes',ans:'si'},
+    {q:'Las enfermedades estimulan el buen juicio',ans:'no'},{q:'Son siempre perversos los hechos premeditados',ans:'no'},
+    {q:'El contacto social tiende a reducir la timidez',ans:'si'},{q:'Son enfermas las personas que tienen mal carácter',ans:'no'},
+    {q:'El rencor se caracteriza generalmente por la persistencia',ans:'si'},{q:'Meticuloso quiere decir lo mismo que cuidadoso',ans:'si'}
+  ]},
+  {id:'abstraccion',name:'Abstracción',intro:'Elige la opción que mejor completa la analogía.',type:'mc',
+  questions:[
+    {q:'ABRIGO es a USAR como PAN es a:',opts:['a) Comer','b) Hambre','c) Agua','d) Cocinar'],ans:'a'},
+    {q:'SEMANA es a MES como MES es a:',opts:['a) Año','b) Hora','c) Minuto','d) Siglo'],ans:'a'},
+    {q:'LEON es a ANIMAL como ROSA es a:',opts:['a) Olor','b) Hoja','c) Planta','d) Espina'],ans:'c'},
+    {q:'LIBERTAD es a INDEPENDENCIA como CAUTIVERIO es a:',opts:['a) Negro','b) Esclavitud','c) Libre','d) Sufrir'],ans:'b'},
+    {q:'DECIR es a DIJO como ESTAR es a:',opts:['a) Cantar','b) Estuvo','c) Hablando','d) Cantó'],ans:'b'},
+    {q:'LUNES es a MARTES como VIERNES es a:',opts:['a) Semana','b) Jueves','c) Día','d) Sábado'],ans:'d'},
+    {q:'PLOMO es a PESADO como CORCHO es a:',opts:['a) Botella','b) Peso','c) Ligero','d) Flotar'],ans:'c'},
+    {q:'ÉXITO es a ALEGRÍA como FRACASO es a:',opts:['a) Tristeza','b) Suerte','c) Fracasar','d) Trabajo'],ans:'a'},
+    {q:'GATO es a TIGRE como PERRO es a:',opts:['a) Lobo','b) Ladrido','c) Mordida','d) Agarrar'],ans:'a'},
+    {q:'4 es a 16 como 5 es a:',opts:['a) 7','b) 45','c) 35','d) 25'],ans:'d'}
+  ]},
+  {id:'planeacion',name:'Planeación',intro:'Ordena las palabras para formar una oración y decide si su significado es Verdadero (V) o Falso (F).',type:'vf',
+  questions:[
+    {q:'Con crecen los niños edad la',ans:'v'},{q:'Buena mar beber el agua de es',ans:'f'},
+    {q:'Lo es paz la guerra opuesto la a',ans:'v'},{q:'Caballos automóvil un que camina los despacio más',ans:'f'},
+    {q:'Consejo a veces es buen seguir un difícil',ans:'v'},{q:'Cuatrocientas todas páginas contienen libros los',ans:'f'},
+    {q:'Crecen las que fresas el más roble',ans:'f'},{q:'Verdadera comparada no puede amistad ser',ans:'f'},
+    {q:'Envidia la perjudiciales gula son y la',ans:'v'},{q:'Nunca acciones premiadas las deben buenas ser',ans:'f'},
+    {q:'Exteriores engañan nunca apariencias las nos',ans:'f'},{q:'Nunca es hombre las que acciones demuestran un l',ans:'f'},
+    {q:'Ciertas siempre muerte de causan clases enfermedades',ans:'f'},{q:'Odio indeseables aversión sentimientos el son y la',ans:'v'},
+    {q:'Frecuentemente por juzgar podemos acciones hombres nosotros sus a los',ans:'v'},
+    {q:'Una es sábana sarapes tan nunca los caliente como',ans:'f'},{q:'Nunca que descuidados los tropiezan son',ans:'f'}
+  ]},
+  {id:'atencion',name:'Atención',intro:'Encuentra el patrón y escribe los dos números que faltan, separados por coma.',type:'series',
+  questions:[
+    {q:'8 · 7 · 6 · 5 · 4 · 3 · __ · __',ans:['2','1']},
+    {q:'3 · 8 · 13 · 18 · 23 · 28 · __ · __',ans:['33','38']},
+    {q:'1 · 2 · 4 · 8 · 16 · 32 · __ · __',ans:['64','128']},
+    {q:'8 · 8 · 6 · 6 · 4 · 4 · __ · __',ans:['2','2']},
+    {q:'11¾ · 12 · 12¼ · 12½ · 12¾ · __ · __',ans:['13','13.25']},
+    {q:'8 · 9 · 12 · 13 · 16 · 17 · __ · __',ans:['20','21']},
+    {q:'16 · 8 · 4 · 2 · 1 · ½ · __ · __',ans:['0.25','0.125']},
+    {q:'31.3 · 40.3 · 49.3 · 58.3 · 67.3 · 76.3 · __ · __',ans:['85.3','94.3']},
+    {q:'3 · 5 · 4 · 6 · 5 · 7 · __ · __',ans:['6','8']},
+    {q:'7 · 11 · 15 · 16 · 20 · 24 · 25 · 29 · __ · __',ans:['33','34']}
+  ]}
+];
+
+const CI_TABLE=[
+  {range:'130–136',label:'Excelente',interp:'Capacidad cognitiva sobresaliente. Destaca en resolución de problemas complejos y toma de decisiones estratégicas.'},
+  {range:'120–129',label:'Superior',interp:'Habilidades intelectuales muy por encima del promedio. Excelente potencial para roles de alta responsabilidad.'},
+  {range:'102–119',label:'Superior término medio',interp:'Buen nivel intelectual por encima del promedio. Capaz de desempeñarse eficientemente en tareas complejas.'},
+  {range:'80–101',label:'Término medio',interp:'Capacidad intelectual promedio. Apto para la mayoría de los puestos con un desempeño adecuado.'},
+  {range:'62–79',label:'Inferior término medio',interp:'Nivel por debajo del promedio. Puede requerir apoyo en tareas que demanden razonamiento abstracto.'},
+  {range:'47–61',label:'Inferior',interp:'Dificultades en el procesamiento de información compleja. Se recomienda evaluación adicional.'},
+  {range:'46 o menos',label:'Deficiente',interp:'Se recomienda evaluación psicológica especializada para determinar necesidades de apoyo.'}
+];
+
+function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+
+// ── State ──
+let allQ=[],idx=0,ans={},candidateName='';
+let timerInterval=null,secondsLeft=30*60,testFinished=false,startTime=null;
+
+// ── Timer ──
+function startTimer(){
+  secondsLeft=30*60;
+  startTime=Date.now();
+  updateTimerDisplay();
+  timerInterval=setInterval(()=>{
+    secondsLeft--;
+    updateTimerDisplay();
+    if(secondsLeft<=0){
+      clearInterval(timerInterval);
+      if(!testFinished) timeUp();
+    }
+  },1000);
+}
+
+function stopTimer(){clearInterval(timerInterval);}
+
+function updateTimerDisplay(){
+  const m=Math.floor(secondsLeft/60),s=secondsLeft%60;
+  const disp=document.getElementById('timer-display');
+  if(!disp)return;
+  disp.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  disp.className='timer-display';
+  if(secondsLeft<=300&&secondsLeft>60) disp.classList.add('warning');
+  if(secondsLeft<=60) disp.classList.add('danger');
+}
+
+function timeUp(){
+  testFinished=true;
+  stopTimer();
+  document.getElementById('timeup-modal').classList.remove('hidden');
+}
+
+function closeModalAndShowResults(){
+  document.getElementById('timeup-modal').classList.add('hidden');
+  showResults();
+}
+
+// ── Screens ──
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+
+function buildQ(){
+  allQ=[];
+  SECTIONS.forEach(sec=>{
+    let qs=shuffle(sec.questions).map((q,i)=>({...q,secId:sec.id,secName:sec.name,type:sec.type,intro:sec.intro,isFirst:i===0}));
+    if(sec.type==='mc'||sec.type==='synthesis') qs=qs.map(q=>({...q,opts:shuffle(q.opts)}));
+    allQ.push(...qs);
+  });
+}
+
+function startTest(){
+  const nameEl=document.getElementById('candidate-name');
+  const errEl=document.getElementById('name-error');
+  const name=nameEl.value.trim();
+  if(!name){
+    nameEl.classList.add('error');
+    errEl.classList.add('visible');
+    nameEl.focus();
+    return;
+  }
+  nameEl.classList.remove('error');
+  errEl.classList.remove('visible');
+  candidateName=name;
+  buildQ();idx=0;ans={};testFinished=false;
+  show('quiz-screen');
+  startTimer();
+  render();
+}
+
+function render(){
+  const total=allQ.length,q=allQ[idx];
+  document.getElementById('q-count-label').textContent=`${idx+1} / ${total}`;
+  document.getElementById('prog-fill').style.width=((idx/total)*100)+'%';
+  document.getElementById('btn-next').textContent=idx===total-1?'Ver resultado →':'Siguiente →';
+  const saved=ans[idx];
+  let html='';
+  if(q.isFirst) html+=`<div class="section-pill">${q.secName}</div><div class="section-intro-box">${q.intro}</div>`;
+  else html+=`<div class="section-pill">${q.secName}</div>`;
+  html+='<div class="q-card">';
+  if(q.type==='vocab'){
+    html+=`<div class="word-pair">${q.q}</div><div class="tf-group">
+      <button class="tf-btn${saved==='1'?' selected':''}" onclick="pick('1',this,'tf-btn')">Sinónimos &nbsp;(1)</button>
+      <button class="tf-btn${saved==='0'?' selected':''}" onclick="pick('0',this,'tf-btn')">Opuestos &nbsp;(0)</button>
+    </div>`;
+  } else if(q.type==='yesno'){
+    html+=`<div class="q-text">${q.q}</div><div class="tf-group">
+      <button class="tf-btn${saved==='si'?' selected':''}" onclick="pick('si',this,'tf-btn')">Sí</button>
+      <button class="tf-btn${saved==='no'?' selected':''}" onclick="pick('no',this,'tf-btn')">No</button>
+    </div>`;
+  } else if(q.type==='vf'){
+    html+=`<div class="q-hint">Ordena las palabras y decide:</div><div class="q-text">${q.q}</div><div class="tf-group">
+      <button class="tf-btn${saved==='v'?' selected':''}" onclick="pick('v',this,'tf-btn')">Verdadero (V)</button>
+      <button class="tf-btn${saved==='f'?' selected':''}" onclick="pick('f',this,'tf-btn')">Falso (F)</button>
+    </div>`;
+  } else if(q.type==='mc'){
+    html+=`<div class="q-text">${q.q}</div><div class="options">`;
+    q.opts.forEach(o=>{const l=o[0].toLowerCase();html+=`<button class="opt-btn${saved===l?' selected':''}" onclick="pick('${l}',this,'opt-btn')">${o}</button>`;});
+    html+='</div>';
+  } else if(q.type==='synthesis'){
+    const sel=saved||[];
+    html+=`<div class="q-text">${q.q}</div><div class="options">`;
+    q.opts.forEach(o=>{const l=o[0].toLowerCase();html+=`<button class="opt-btn${sel.includes(l)?' selected':''}" onclick="pickSyn('${l}',this)">${o}</button>`;});
+    html+=`</div><p class="syn-hint">Selecciona exactamente 2 opciones</p>`;
+  } else if(q.type==='text'){
+    html+=`<div class="q-text">${q.q}</div><input class="text-input" type="text" placeholder="Tu respuesta..." value="${saved||''}" oninput="ans[${idx}]=this.value.trim()">`;
+  } else if(q.type==='series'){
+    html+=`<div class="series-display">${q.q}</div><input class="text-input" type="text" placeholder="ej: 64, 128" value="${saved||''}" oninput="ans[${idx}]=this.value.trim()">`;
+  }
+  html+='</div>';
+  document.getElementById('q-mount').innerHTML=html;
+}
+
+function pick(val,btn,cls){
+  ans[idx]=val;
+  btn.closest('.q-card').querySelectorAll('.'+cls).forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+function pickSyn(val,btn){
+  let sel=ans[idx]||[];
+  if(sel.includes(val)){sel=sel.filter(x=>x!==val);btn.classList.remove('selected');}
+  else if(sel.length<2){sel=[...sel,val];btn.classList.add('selected');}
+  ans[idx]=sel;
+}
+
+function nextQuestion(){
+  idx++;
+  if(idx>=allQ.length){
+    testFinished=true;
+    stopTimer();
+    showResults();
+    return;
+  }
+  render();
+}
+
+// ── Scoring ──
+function calcScores(){
+  const s={vocab:0,sintesis:0,concentracion:0,analisis:0,abstraccion:0,planeacion:0,atencion:0};
+  allQ.forEach((q,i)=>{
+    const a=ans[i];
+    if(a===undefined||a===''||(Array.isArray(a)&&!a.length)) return;
+    if(q.type==='vocab'){a===q.ans?s.vocab++:s.vocab--;}
+    else if(q.type==='synthesis'){const ok=[...a].sort().join('')===[...q.ans].sort().join('');if(ok)s.sintesis++;}
+    else if(q.type==='text'){const n=parseFloat(String(a).replace(/[$,%]/g,''));if(!isNaN(n)&&Math.abs(n-parseFloat(q.ans))<0.01)s.concentracion++;}
+    else if(q.type==='yesno'){a===q.ans?s.analisis++:s.analisis--;}
+    else if(q.type==='mc'){if(a===q.ans)s.abstraccion++;}
+    else if(q.type==='vf'){a===q.ans?s.planeacion++:s.planeacion--;}
+    else if(q.type==='series'){
+      const p=String(a).split(/[\s,]+/).map(x=>x.trim()).filter(Boolean);
+      if(p.length>=2){const ok=Math.abs(parseFloat(p[0])-parseFloat(q.ans[0]))<0.01&&Math.abs(parseFloat(p[1])-parseFloat(q.ans[1]))<0.01;if(ok)s.atencion++;}
+    }
+  });
+  Object.keys(s).forEach(k=>s[k]=Math.max(0,s[k]));
+  s.concentracion*=2;s.atencion*=2;
+  return s;
+}
+
+function getCI(total){
+  if(total>=130)return CI_TABLE[0];if(total>=120)return CI_TABLE[1];if(total>=102)return CI_TABLE[2];
+  if(total>=80)return CI_TABLE[3];if(total>=62)return CI_TABLE[4];if(total>=47)return CI_TABLE[5];return CI_TABLE[6];
+}
+
+function elapsedStr(){
+  if(!startTime) return '—';
+  const elapsed=Math.floor((Date.now()-startTime)/1000);
+  const m=Math.floor(elapsed/60),s=elapsed%60;
+  return `${m}m ${s}s`;
+}
+
+// ── Save to Google Sheets ──
+async function saveResult(data){
+  const statusEl=document.getElementById('save-status');
+  if(!APPS_SCRIPT_URL||APPS_SCRIPT_URL==='TU_URL_AQUI'){
+    statusEl.className='save-status error';
+    statusEl.textContent='⚠️ URL de guardado no configurada. Consulta las instrucciones de instalación.';
+    return;
+  }
+  try{
+    await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    statusEl.className='save-status saved';
+    statusEl.textContent='✅ Resultado guardado correctamente en la hoja de cálculo.';
+  }catch(e){
+    statusEl.className='save-status error';
+    statusEl.textContent='❌ No se pudo guardar el resultado. Verifica tu conexión o la URL configurada.';
+  }
+}
+
+function showResults(){
+  const scores=calcScores();
+  const total=Object.values(scores).reduce((a,b)=>a+b,0);
+  const ci=getCI(total);
+  const elapsed=elapsedStr();
+  const now=new Date().toLocaleString('es-MX');
+  show('result-screen');
+  document.getElementById('res-name').textContent=`Resultado de ${candidateName}`;
+  document.getElementById('res-score').textContent=total;
+  document.getElementById('res-range').textContent=`Rango: ${ci.range} puntos`;
+  document.getElementById('res-badge').textContent=ci.label;
+  document.getElementById('res-interp').textContent=ci.interp;
+  document.getElementById('res-time').textContent=`⏱ Tiempo utilizado: ${elapsed}`;
+  const names={vocab:'Vocabulario',sintesis:'Síntesis',concentracion:'Concentración',analisis:'Análisis',abstraccion:'Abstracción',planeacion:'Planeación',atencion:'Atención'};
+  const maxes={vocab:30,sintesis:15,concentracion:24,analisis:20,abstraccion:10,planeacion:17,atencion:20};
+  document.getElementById('sec-grid').innerHTML=Object.entries(scores).map(([k,v])=>
+    `<div class="sec-card"><div class="sec-name">${names[k]}</div><div class="sec-pts">${v}</div><div class="sec-max">/ ${maxes[k]} pts</div></div>`
+  ).join('');
+  document.getElementById('ci-table').innerHTML=CI_TABLE.map(r=>
+    `<div class="interp-row"><span class="interp-range">${r.range}</span><span class="interp-label${r.label===ci.label?' active':''}">${r.label}</span></div>`
+  ).join('');
+  // Save
+  saveResult({
+    nombre:candidateName,
+    fecha:now,
+    tiempoUsado:elapsed,
+    puntajeTotal:total,
+    clasificacion:ci.label,
+    vocab:scores.vocab,
+    sintesis:scores.sintesis,
+    concentracion:scores.concentracion,
+    analisis:scores.analisis,
+    abstraccion:scores.abstraccion,
+    planeacion:scores.planeacion,
+    atencion:scores.atencion
+  });
+}
+
+function restartTest(){
+  stopTimer();
+  testFinished=false;
+  document.getElementById('candidate-name').value='';
+  show('start-screen');
+}
+</script>
+</body>
+</html>
