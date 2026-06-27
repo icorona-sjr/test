@@ -126,6 +126,22 @@
   .btn-retry{width:100%;padding:.8rem;font-size:14px;font-weight:500;background:var(--surface);color:var(--text);border:0.5px solid var(--border-strong);border-radius:var(--radius);cursor:pointer;transition:background .15s}
   .btn-retry:hover{background:var(--surface-alt)}
   .disclaimer{font-size:12px;color:var(--text-muted);text-align:center;line-height:1.5;margin-top:1rem}
+
+  /* Incorrect answers */
+  .errors-box{margin-bottom:1.25rem}
+  .errors-box h2{font-size:15px;font-weight:600;margin-bottom:1rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em}
+  .errors-section{margin-bottom:1rem}
+  .errors-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);padding:.3rem .75rem;background:var(--surface-alt);border-radius:var(--radius);margin-bottom:.4rem;display:inline-block}
+  .error-item{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:.85rem 1rem;margin-bottom:.4rem;display:grid;grid-template-columns:1fr;gap:.35rem}
+  .error-item.unanswered{border-left:3px solid var(--text-muted)}
+  .error-item.wrong{border-left:3px solid var(--danger)}
+  .error-q{font-size:14px;color:var(--text);line-height:1.5}
+  .error-row{display:flex;align-items:baseline;gap:.4rem;font-size:13px;flex-wrap:wrap}
+  .error-label{color:var(--text-muted);flex-shrink:0}
+  .error-given{color:var(--danger);font-weight:500}
+  .error-correct{color:var(--success);font-weight:500}
+  .no-errors{text-align:center;padding:1.25rem;font-size:14px;color:var(--success);background:#edf7f2;border:0.5px solid #a8d5b8;border-radius:var(--radius)}
+
   @media(max-width:480px){
     h1{font-size:1.5rem}
     .tf-group{flex-direction:column}
@@ -214,6 +230,11 @@
       <h3>Tabla de clasificación</h3>
       <div id="ci-table"></div>
     </div>
+    <div class="divider"></div>
+    <div class="errors-box">
+      <h2>Respuestas incorrectas</h2>
+      <div id="errors-list"></div>
+    </div>
     <button class="btn-retry" onclick="restartTest()">↺ Realizar el test de nuevo</button>
     <p class="disclaimer">El test de inteligencia mide el C.I. de forma aproximada. Para resultados exactos, consulte con un psicólogo especialista.</p>
   </div>
@@ -224,7 +245,7 @@
 // ──────────────────────────────────────────────
 // CONFIGURACIÓN — reemplaza con tu URL de Google Apps Script
 // ──────────────────────────────────────────────
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxxFxBvbkJOUH16p-wuymhDlv066RulpQjdJgEMzd92BuoelkZm07kJzOha3qriwBJNYA/exec';
+const APPS_SCRIPT_URL = 'TU_URL_AQUI';
 // ──────────────────────────────────────────────
 
 const SECTIONS=[
@@ -512,7 +533,96 @@ function elapsedStr(){
   return `${m}m ${s}s`;
 }
 
-// ── Save to Google Sheets ──
+// ── Incorrect answers review ──
+function formatGiven(q, a) {
+  if (a === undefined || a === '' || (Array.isArray(a) && !a.length)) return null;
+  if (q.type === 'vocab') return a === '1' ? 'Sinónimos (1)' : 'Opuestos (0)';
+  if (q.type === 'yesno') return a === 'si' ? 'Sí' : 'No';
+  if (q.type === 'vf') return a === 'v' ? 'Verdadero (V)' : 'Falso (F)';
+  if (q.type === 'mc') {
+    const found = (q.opts || []).find(o => o[0].toLowerCase() === a);
+    return found || a;
+  }
+  if (q.type === 'synthesis') {
+    return a.map(l => { const f = (q.opts || []).find(o => o[0].toLowerCase() === l); return f || l; }).join(' + ');
+  }
+  if (q.type === 'text' || q.type === 'series') return a;
+  return a;
+}
+
+function formatCorrect(q) {
+  if (q.type === 'vocab') return q.ans === '1' ? 'Sinónimos (1)' : 'Opuestos (0)';
+  if (q.type === 'yesno') return q.ans === 'si' ? 'Sí' : 'No';
+  if (q.type === 'vf') return q.ans === 'v' ? 'Verdadero (V)' : 'Falso (F)';
+  if (q.type === 'mc') {
+    const found = (q.opts || []).find(o => o[0].toLowerCase() === q.ans);
+    return found || q.ans;
+  }
+  if (q.type === 'synthesis') {
+    return q.ans.map(l => { const f = (q.opts || []).find(o => o[0].toLowerCase() === l); return f || l; }).join(' + ');
+  }
+  if (q.type === 'text') return q.ans;
+  if (q.type === 'series') return q.ans.join(', ');
+  return q.ans;
+}
+
+function isCorrect(q, a) {
+  if (a === undefined || a === '' || (Array.isArray(a) && !a.length)) return false;
+  if (q.type === 'vocab') return a === q.ans;
+  if (q.type === 'yesno') return a === q.ans;
+  if (q.type === 'vf') return a === q.ans;
+  if (q.type === 'mc') return a === q.ans;
+  if (q.type === 'synthesis') return [...a].sort().join('') === [...q.ans].sort().join('');
+  if (q.type === 'text') { const n = parseFloat(String(a).replace(/[$,%]/g, '')); return !isNaN(n) && Math.abs(n - parseFloat(q.ans)) < 0.01; }
+  if (q.type === 'series') {
+    const p = String(a).split(/[\s,]+/).map(x => x.trim()).filter(Boolean);
+    return p.length >= 2 && Math.abs(parseFloat(p[0]) - parseFloat(q.ans[0])) < 0.01 && Math.abs(parseFloat(p[1]) - parseFloat(q.ans[1])) < 0.01;
+  }
+  return false;
+}
+
+function buildErrorsList() {
+  // Group wrong/unanswered by section, preserving section order
+  const sectionOrder = ['vocab','sintesis','concentracion','analisis','abstraccion','planeacion','atencion'];
+  const sectionNames = {vocab:'Vocabulario',sintesis:'Síntesis',concentracion:'Concentración',analisis:'Análisis',abstraccion:'Abstracción',planeacion:'Planeación',atencion:'Atención'};
+  const bySection = {};
+  sectionOrder.forEach(id => bySection[id] = []);
+
+  allQ.forEach((q, i) => {
+    const a = ans[i];
+    const answered = !(a === undefined || a === '' || (Array.isArray(a) && !a.length));
+    const correct = answered && isCorrect(q, a);
+    if (!correct) bySection[q.secId].push({ q, i, answered, a });
+  });
+
+  const hasAny = sectionOrder.some(id => bySection[id].length > 0);
+  if (!hasAny) {
+    return '<div class="no-errors">¡Sin errores! Todas las preguntas respondidas son correctas.</div>';
+  }
+
+  let html = '';
+  sectionOrder.forEach(secId => {
+    const items = bySection[secId];
+    if (!items.length) return;
+    html += `<div class="errors-section">
+      <div class="errors-section-title">${sectionNames[secId]} — ${items.length} ${items.length === 1 ? 'error' : 'errores'}</div>`;
+    items.forEach(({ q, answered, a }) => {
+      const cls = answered ? 'wrong' : 'unanswered';
+      const givenHtml = answered
+        ? `<div class="error-row"><span class="error-label">Tu respuesta:</span><span class="error-given">${formatGiven(q, a)}</span></div>`
+        : `<div class="error-row"><span class="error-label">Tu respuesta:</span><span class="error-given" style="color:var(--text-muted)">Sin responder</span></div>`;
+      html += `<div class="error-item ${cls}">
+        <div class="error-q">${q.q}</div>
+        ${givenHtml}
+        <div class="error-row"><span class="error-label">Respuesta correcta:</span><span class="error-correct">${formatCorrect(q)}</span></div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  return html;
+}
+
+
 async function saveResult(data){
   const statusEl=document.getElementById('save-status');
   if(!APPS_SCRIPT_URL||APPS_SCRIPT_URL==='TU_URL_AQUI'){
@@ -551,6 +661,7 @@ function showResults(){
   document.getElementById('ci-table').innerHTML=CI_TABLE.map(r=>
     `<div class="interp-row"><span class="interp-range">${r.range}</span><span class="interp-label${r.label===ci.label?' active':''}">${r.label}</span></div>`
   ).join('');
+  document.getElementById('errors-list').innerHTML = buildErrorsList();
   // Save
   saveResult({
     nombre:candidateName,
